@@ -1,0 +1,47 @@
+name: ImageFs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  process_lfs_file:
+    name: Process ImageFs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tar grep sed
+
+      - name: Extract imagefs.txz
+        run: |
+          wget https://github.com/uzu09811/realeses/
+          mkdir extracted
+          tar -xJf imagefs.txz -C extracted
+          echo "Extraction completed."
+
+      - name: Find and Replace 'com.winlator' with 'io.github.winemu'
+        run: |
+          grep -rl "com.winlator" extracted/ | while read -r file; do
+            echo "Processing $file"
+            sed -i 's/com\.winlator/io.github.winemu/g' "$file"
+          done
+          echo "Replacement completed."
+
+      - name: List Modified Files
+        run: |
+          echo "Modified files:"
+          grep -rl "io.github.winemu" extracted/
+
+      - name: Upload Modified Files as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: modified_imagefs
+          path: extracted/
