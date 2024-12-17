@@ -40,8 +40,13 @@ jobs:
           echo "Modified files:"
           grep -rl "io.github.winemu" extracted/
 
-      - name: Upload Modified Files as Artifact
+      - name: Recompress to TXZ
+        run: |
+          tar -cJf modified_imagefs.txz -C extracted .
+          echo "Recompression completed."
+
+      - name: Upload Recompressed File as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: modified_imagefs
-          path: extracted/
+          name: modified_imagefs.txz
+          path: modified_imagefs.txz
