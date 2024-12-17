@@ -22,7 +22,7 @@ jobs:
 
       - name: Extract imagefs.txz
         run: |
-          wget https://github.com/uzu09811/realeses/
+          wget https://github.com/uzu09811/ImageFs/releases/download/1/imagefs.txz
           mkdir extracted
           tar -xJf imagefs.txz -C extracted
           echo "Extraction completed."
